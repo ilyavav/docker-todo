@@ -1,0 +1,111 @@
+﻿body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #222;
+    background: #f5f6f8;
+}
+
+main {
+    max-width: 760px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+    form label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+.form-row {
+    display: flex;
+    gap: 10px;
+}
+
+input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    font: inherit;
+}
+
+button {
+    padding: 10px 14px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    background: white;
+    font: inherit;
+    cursor: pointer;
+}
+
+    button:hover {
+        background: #e9edf3;
+    }
+
+    button:disabled {
+        opacity: 0.6;
+        cursor: wait;
+    }
+
+ul {
+    padding: 0;
+    list-style: none;
+}
+
+.task {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+}
+
+.task-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+    cursor: pointer;
+}
+
+.task-name {
+    overflow-wrap: anywhere;
+}
+
+.task-label input {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.complete .task-name {
+    color: #777;
+    text-decoration: line-through;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.delete-button {
+    color: #a52222;
+}
+
+#status {
+    min-height: 20px;
+}
+
+.error {
+    color: #a52222;
+}

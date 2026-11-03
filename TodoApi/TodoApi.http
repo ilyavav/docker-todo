@@ -28,4 +28,4 @@ Content-Type: application/json
 GET {{TodoApi_HostAddress}}/todoitems/complete
 
 ### 6. Удалить задачу
-DELETE {{TodoApi_HostAddress}}/todoitems/1
+DELETE {{TodoApi_HostAddress}}/todoitems/2
