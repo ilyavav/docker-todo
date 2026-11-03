@@ -31,19 +31,21 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// Получить все задачи.
+// Получить все задачи по возрастанию ID.
 app.MapGet("/todoitems", async (TodoDb db) =>
 {
     return await db.Todos
+        .OrderBy(todo => todo.Id)
         .Select(todo => new TodoItemDTO(todo))
         .ToListAsync();
 });
 
-// Получить выполненные задачи.
+// Получить выполненные задачи по возрастанию ID.
 app.MapGet("/todoitems/complete", async (TodoDb db) =>
 {
     return await db.Todos
         .Where(todo => todo.IsComplete)
+        .OrderBy(todo => todo.Id)
         .Select(todo => new TodoItemDTO(todo))
         .ToListAsync();
 });
