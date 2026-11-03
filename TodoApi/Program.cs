@@ -16,6 +16,7 @@ builder.Services.AddDbContext<TodoDb>(options =>
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<TodoDb>();
@@ -60,9 +61,14 @@ app.MapGet("/todoitems/{id:int}", async (int id, TodoDb db) =>
 // Создать задачу.
 app.MapPost("/todoitems", async (TodoItemDTO inputTodo, TodoDb db) =>
 {
+    if (string.IsNullOrWhiteSpace(inputTodo.Name))
+    {
+        return Results.BadRequest(new { error = "Укажи название задачи." });
+    }
+
     var todo = new Todo
     {
-        Name = inputTodo.Name,
+        Name = inputTodo.Name.Trim(),
         IsComplete = inputTodo.IsComplete
     };
 
@@ -84,7 +90,12 @@ app.MapPut("/todoitems/{id:int}", async (int id, TodoItemDTO inputTodo, TodoDb d
         return Results.NotFound();
     }
 
-    todo.Name = inputTodo.Name;
+    if (string.IsNullOrWhiteSpace(inputTodo.Name))
+    {
+        return Results.BadRequest(new { error = "Укажи название задачи." });
+    }
+
+    todo.Name = inputTodo.Name.Trim();
     todo.IsComplete = inputTodo.IsComplete;
 
     await db.SaveChangesAsync();
