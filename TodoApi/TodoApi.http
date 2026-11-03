@@ -1,6 +1,31 @@
 @TodoApi_HostAddress = http://localhost:5153
 
-GET {{TodoApi_HostAddress}}/weatherforecast/
-Accept: application/json
+### 1. Создать задачу
+POST {{TodoApi_HostAddress}}/todoitems
+Content-Type: application/json
 
-###
+{
+  "name": "Подготовить выступление по Docker",
+  "isComplete": false
+}
+
+### 2. Получить все задачи
+GET {{TodoApi_HostAddress}}/todoitems
+
+### 3. Получить задачу по ID
+GET {{TodoApi_HostAddress}}/todoitems/1
+
+### 4. Изменить задачу и отметить выполненной
+PUT {{TodoApi_HostAddress}}/todoitems/1
+Content-Type: application/json
+
+{
+  "name": "Подготовить и проверить выступление по Docker",
+  "isComplete": true
+}
+
+### 5. Получить выполненные задачи
+GET {{TodoApi_HostAddress}}/todoitems/complete
+
+### 6. Удалить задачу
+DELETE {{TodoApi_HostAddress}}/todoitems/1
