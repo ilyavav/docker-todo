@@ -1,0 +1,15 @@
+name: docker-todo-registry
+
+services:
+  registry:
+    image: registry:3
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5000:5000"
+    environment:
+      OTEL_TRACES_EXPORTER: "none"
+    volumes:
+      - registry_data:/var/lib/registry
+
+volumes:
+  registry_data:
