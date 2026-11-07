@@ -19,3 +19,4 @@
 docker/
 *.md
 *.http
+src/TodoApi/appsettings.Development.json
