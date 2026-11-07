@@ -1,0 +1,12 @@
+# Одностадийная сборка — только для сравнения размеров. SDK остаётся в образе.
+FROM mcr.microsoft.com/dotnet/sdk:10.0
+WORKDIR /app
+
+COPY src/TodoApi/ .
+RUN dotnet publish -c Release -o out
+
+# Соглашение команды: API слушает HTTP на 8080
+ENV ASPNETCORE_HTTP_PORTS=8080
+EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "out/TodoApi.dll"]
