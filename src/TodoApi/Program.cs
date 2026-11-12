@@ -2,17 +2,17 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("TodoDb");
 
 if (string.IsNullOrWhiteSpace(connectionString))
 {
-    throw new InvalidOperationException(
-        "Не задана строка подключения TodoDb.");
+    throw new InvalidOperationException("Не задана строка подключения TodoDb.");
 }
 
-builder.Services.AddDbContext<TodoDb>(options =>
-    options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<TodoDb>(options => options.UseNpgsql(connectionString));
 
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -23,6 +23,7 @@ using (var scope = app.Services.CreateScope())
     await db.Database.EnsureCreatedAsync();
 }
 
+// Configure the HTTP request pipeline.
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
@@ -31,26 +32,16 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// Получить все задачи по возрастанию ID.
 app.MapGet("/todoitems", async (TodoDb db) =>
 {
-    return await db.Todos
-        .OrderBy(todo => todo.Id)
-        .Select(todo => new TodoItemDTO(todo))
-        .ToListAsync();
+    return await db.Todos.OrderBy(todo => todo.Id).Select(todo => new TodoItemDTO(todo)).ToListAsync();
 });
 
-// Получить выполненные задачи по возрастанию ID.
 app.MapGet("/todoitems/complete", async (TodoDb db) =>
 {
-    return await db.Todos
-        .Where(todo => todo.IsComplete)
-        .OrderBy(todo => todo.Id)
-        .Select(todo => new TodoItemDTO(todo))
-        .ToListAsync();
+    return await db.Todos.Where(todo => todo.IsComplete).OrderBy(todo => todo.Id).Select(todo => new TodoItemDTO(todo)).ToListAsync();
 });
 
-// Получить задачу по идентификатору.
 app.MapGet("/todoitems/{id:int}", async (int id, TodoDb db) =>
 {
     var todo = await db.Todos.FindAsync(id);
@@ -63,7 +54,6 @@ app.MapGet("/todoitems/{id:int}", async (int id, TodoDb db) =>
     return Results.Ok(new TodoItemDTO(todo));
 });
 
-// Создать задачу.
 app.MapPost("/todoitems", async (TodoItemDTO inputTodo, TodoDb db) =>
 {
     if (string.IsNullOrWhiteSpace(inputTodo.Name))
@@ -71,21 +61,14 @@ app.MapPost("/todoitems", async (TodoItemDTO inputTodo, TodoDb db) =>
         return Results.BadRequest(new { error = "Укажи название задачи." });
     }
 
-    var todo = new Todo
-    {
-        Name = inputTodo.Name.Trim(),
-        IsComplete = inputTodo.IsComplete
-    };
+    var todo = new Todo { Name = inputTodo.Name.Trim(), IsComplete = inputTodo.IsComplete };
 
     db.Todos.Add(todo);
     await db.SaveChangesAsync();
 
-    return Results.Created(
-        $"/todoitems/{todo.Id}",
-        new TodoItemDTO(todo));
+    return Results.Created($"/todoitems/{todo.Id}", new TodoItemDTO(todo));
 });
 
-// Изменить задачу.
 app.MapPut("/todoitems/{id:int}", async (int id, TodoItemDTO inputTodo, TodoDb db) =>
 {
     var todo = await db.Todos.FindAsync(id);
@@ -108,7 +91,6 @@ app.MapPut("/todoitems/{id:int}", async (int id, TodoItemDTO inputTodo, TodoDb d
     return Results.NoContent();
 });
 
-// Удалить задачу.
 app.MapDelete("/todoitems/{id:int}", async (int id, TodoDb db) =>
 {
     var todo = await db.Todos.FindAsync(id);
